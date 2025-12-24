@@ -1,7 +1,11 @@
 {
   "routes": [
     {
-      "src": "/noc/Ecertificate",
+      "src": "^/$",
+      "dest": "/noc/Ecertificate/index.html"
+    },
+    {
+      "src": "^/noc/Ecertificate/?$",
       "dest": "/noc/Ecertificate/index.html"
     }
   ]
