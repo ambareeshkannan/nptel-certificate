@@ -1,1 +1,53 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Course Certificate</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<div class="container">
+    <div id="status" class="status">
+        Verifying certificate...
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const certId = params.get("q");
+    const statusEl = document.getElementById("status");
+
+    if (!certId) {
+        statusEl.innerText = "Invalid certificate link.";
+        throw new Error("Missing certificate ID");
+    }
+
+    fetch("/certificates/certificates.json")
+        .then(res => res.json())
+        .then(data => {
+            if (!data[certId]) {
+                statusEl.innerText = "Certificate not found.";
+                return;
+            }
+
+            const filePath = `/certificates/${data[certId]}`;
+
+            statusEl.innerText = "Certificate verified. Downloading...";
+
+            const link = document.createElement("a");
+            link.href = filePath;
+            link.download = data[certId];
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(() => {
+            statusEl.innerText = "Error verifying certificate.";
+        });
+</script>
+
+</body>
+</html>
